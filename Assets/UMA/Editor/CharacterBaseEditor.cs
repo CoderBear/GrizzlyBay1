@@ -21,7 +21,7 @@ namespace UMAEditor
         private readonly Type[] _dnaTypes;
         private readonly string[] _dnaTypeNames;
 
-        private int _viewDna = 0;
+        public int viewDna = 0;
 
 		public UMAData.UMARecipe recipe;
         public DNAMasterEditor(UMAData.UMARecipe recipe)
@@ -45,15 +45,16 @@ namespace UMAEditor
 
 		public bool OnGUI(ref bool _dnaDirty, ref bool _textureDirty, ref bool _meshDirty)
         {
-			var newToolBarIndex = EditorGUILayout.Popup("DNA", _viewDna, _dnaTypeNames);
-			if (newToolBarIndex != _viewDna)
+			var newToolBarIndex = EditorGUILayout.Popup("DNA", viewDna, _dnaTypeNames);
+			if (newToolBarIndex != viewDna)
 			{
-				_viewDna = newToolBarIndex;
+				viewDna = newToolBarIndex;
 			}
-			
 
-			if (_viewDna >= 0) {
-	            Type dnaType = _dnaTypes[_viewDna];
+
+			if (viewDna >= 0 )
+			{
+	            Type dnaType = _dnaTypes[viewDna];
 
 				if (_dnaValues[dnaType].OnGUI())
 				{
@@ -68,6 +69,14 @@ namespace UMAEditor
 		internal bool NeedsReenable()
 		{
 			return _dnaValues == null;
+		}
+
+		public bool IsValid
+		{
+			get
+			{
+				return !(_dnaTypes == null || _dnaTypes.Length == 0);
+			}
 		}
 	}
 
@@ -682,13 +691,19 @@ namespace UMAEditor
 			_rebuildOnLayout = false;
 			if (_recipe != null) 
 			{
+				int oldViewDNA = dnaEditor.viewDna;
+				UMAData.UMARecipe oldRecipe = dnaEditor.recipe;
 				dnaEditor = new DNAMasterEditor(_recipe);
+				if (oldRecipe == _recipe) {
+					dnaEditor.viewDna = oldViewDNA;
+				}
 				slotEditor = new SlotMasterEditor(_recipe);
 			}
         }
 
         private bool ToolbarGUI()
         {
+			if (!dnaEditor.IsValid) return false;
             _toolbarIndex = GUILayout.Toolbar(_toolbarIndex, toolbar);
             switch(_toolbarIndex)
             {

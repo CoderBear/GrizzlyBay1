@@ -28,7 +28,10 @@ public class SlotLibrary : SlotLibraryBase
 				if (!slotDictionary.ContainsKey(hash))
 				{
 					slotElementList[i].listID = i;
-					slotElementList[i].boneWeights = slotElementList[i].meshRenderer.sharedMesh.boneWeights;
+					if (slotElementList[i].meshRenderer != null)
+					{
+						slotElementList[i].boneWeights = slotElementList[i].meshRenderer.sharedMesh.boneWeights;
+					}
 					slotDictionary.Add(hash, slotElementList[i]);
 				}
 			}

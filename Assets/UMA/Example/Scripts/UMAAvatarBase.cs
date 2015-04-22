@@ -16,7 +16,11 @@ public abstract class UMAAvatarBase : MonoBehaviour {
 	[NonSerialized]
 	public GameObject umaChild;
 	protected RaceData umaRace = null;
-	
+
+	public UMADataEvent CharacterCreated;
+	public UMADataEvent CharacterDestroyed;
+	public UMADataEvent CharacterUpdated;
+
 	public virtual void Start()
 	{
 		Initialize();
@@ -27,17 +31,28 @@ public abstract class UMAAvatarBase : MonoBehaviour {
 		{
 			context = UMAContext.FindInstance();
 		}
-		
+
 		if (umaData == null)
 		{
 			umaData = GetComponent<UMAData>();
 			if (umaData == null)
 			{
 				umaData = gameObject.AddComponent<UMAData>();
-//				umaData.umaGenerator = umaGenerator ?? umaData.umaGenerator;
-				if (umaGenerator != null) umaData.umaGenerator = umaGenerator;
+				if (umaGenerator != null && !umaGenerator.gameObject.activeInHierarchy)
+				{
+					Debug.LogError("Invalid UMA Generator on Avatar.", gameObject);
+					Debug.LogError("UMA generators must be active scene objects!", umaGenerator.gameObject);
+					umaGenerator = null;
+				}
 			}
 		}
+		if (umaGenerator != null)
+		{
+			umaData.umaGenerator = umaGenerator;
+		}
+		if (CharacterCreated != null) umaData.CharacterCreated = CharacterCreated;
+		if (CharacterDestroyed != null) umaData.CharacterDestroyed = CharacterDestroyed;
+		if (CharacterUpdated != null) umaData.CharacterUpdated = CharacterUpdated;
 	}
 
 	public virtual void Load(UMARecipeBase umaRecipe)
@@ -102,10 +117,7 @@ public abstract class UMAAvatarBase : MonoBehaviour {
 
 	public virtual void Hide()
 	{
-		if (umaChild != null)
-		{
-			Destroy(umaChild);
-		}
+		Destroy(umaChild);
 		umaChild = null;
 		if (umaData != null)
 		{
