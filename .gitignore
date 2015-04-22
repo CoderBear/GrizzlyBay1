@@ -1,3 +1,7 @@
+# built application files
+*.apk
+*.exe
+
 [Ll]ibrary/
 [Tt]emp/
 [Oo]bj/
@@ -15,6 +19,9 @@
 
 #Unity3D Generated File On Crash Reports
 sysinfo.txt
+
+#Unity3D Generated Meta Files
+*.meta
 
 # =========================
 # Operating System Files
