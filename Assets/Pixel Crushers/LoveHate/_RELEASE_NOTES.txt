@@ -1,0 +1,23 @@
+/*
+Love/Hate
+Copyright © Pixel Crushers
+RELEASE NOTES
+-------------
+
+Version 1.1
+- Added: Colored scene view gizmos for faction members and traits.
+- Added: Aura triggers.
+- Added: FactionManager and FactionMember string serialization methods.
+- Improved: Improved rumor evalation. Added deed.aggression to better affect dominance.
+- Improved: Faction manager now distributes witness evaluation of deeds across frames.
+- Improved: Better handling of uninitialized fields.
+- Improved: Added cache to interaction triggers to reduce component lookups.
+- Improved: Replaced foreach loops to eliminate garbage collection caused by Mono boxing.
+- Fixed: Deed template library editor bug when adding/removing templates.
+- ORK Framework: Added support.
+- PlayMaker: Added string serialization actions, OnAura and OnEnterAura events.
+
+
+Version 1.0
+- Initial release.
+*/
