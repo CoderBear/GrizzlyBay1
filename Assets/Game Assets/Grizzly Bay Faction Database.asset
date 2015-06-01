@@ -12,25 +12,81 @@ MonoBehaviour:
   m_Name: Grizzly Bay Faction Database
   m_EditorClassIdentifier: 
   personalityTraitDefinitions:
-  - name: Lawful
-    description: 
-  - name: Handy
-    description: 
-  - name: Active
-    description: 
-  - name: Jovial
-    description: 
-  - name: Social
-    description: 
+  - name: Openess
+    description: General appreciation for art, emotion adventure, and variety
+  - name: Conscientiousness
+    description: 'Self-discipline, duty, and meeting outside expectations '
+  - name: Extraversion
+    description: 'Engagement with the external world, interacting with people '
+  - name: Agreeableness
+    description: 'Considerate, kind, generous, trusting and trustworthy, helpful '
+  - name: Neuroticism
+    description: 'Tendency to feel anger, anxiety, or depression '
   relationshipTraitDefinitions:
   - name: Affinity
     description: (Required)
-  presets: []
+  presets:
+  - name: Citzens
+    description: NPC Residents of Grizzly Bay
+    traits:
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+  - name: Brewsters
+    description: Thoughs involved with alchohol production
+    traits:
+    - 62
+    - 100
+    - 61
+    - 0
+    - 57
+  - name: Harbormen
+    description: Those Involved with Docks and the Sea
+    traits:
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+  - name: Public Officials
+    description: Those linked to city hall
+    traits:
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+  - name: Service Officers
+    description: Police, Fire, Emergency Services
+    traits:
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+  - name: Businessmen
+    description: Those who own and run businesses
+    traits:
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+  - name: Foresters
+    description: Those involved with the lumber trade
+    traits:
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
   factions:
   - id: 0
     name: Player
-    description: 
-    color: 0
+    description: User controlled character
+    color: 8
     parents: 
     traits:
     - 0
@@ -41,8 +97,8 @@ MonoBehaviour:
     relationships: []
   - id: 1
     name: Citizens
-    description: 
-    color: 2
+    description: NPC Residents of Grizzly Bay
+    color: 6
     parents: 
     traits:
     - 0
@@ -51,11 +107,11 @@ MonoBehaviour:
     - 0
     - 0
     relationships: []
-  - id: 2
-    name: Haters
-    description: 
-    color: 1
-    parents: 0000000001000000
+  - id: 4
+    name: Brewsters
+    description: Thoughs involved with alchohol production
+    color: 11
+    parents: 01000000
     traits:
     - 0
     - 0
@@ -65,9 +121,9 @@ MonoBehaviour:
     relationships: []
   - id: 3
     name: Harbormen
-    description: 
-    color: 0
-    parents: 0000000001000000
+    description: Those involved with Docks and Sea
+    color: 4
+    parents: 01000000
     traits:
     - 0
     - 0
@@ -75,11 +131,11 @@ MonoBehaviour:
     - 0
     - 0
     relationships: []
-  - id: 4
-    name: Brewers
-    description: 
-    color: 0
-    parents: 0000000001000000
+  - id: 2
+    name: Public Officials
+    description: Those linked to city hall
+    color: 1
+    parents: 01000000
     traits:
     - 0
     - 0
@@ -87,9 +143,21 @@ MonoBehaviour:
     - 0
     - 0
     relationships: []
-  - id: 5
-    name: 
-    description: 
+  - id: 6
+    name: Service Officers
+    description: Police, Fire, Emergency Services
+    color: 2
+    parents: 01000000
+    traits:
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    relationships: []
+  - id: 7
+    name: Businessmen
+    description: Those who own and run businesses
     color: 0
     parents: 01000000
     traits:
@@ -99,4 +167,16 @@ MonoBehaviour:
     - 0
     - 0
     relationships: []
-  nextID: 6
+  - id: 9
+    name: Foresters
+    description: Those involved with the lumber trade
+    color: 5
+    parents: 01000000
+    traits:
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    relationships: []
+  nextID: 10

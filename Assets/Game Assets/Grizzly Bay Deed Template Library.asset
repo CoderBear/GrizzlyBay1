@@ -1,0 +1,123 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 765aa6d0f28b2be4e8f092ea85f74278, type: 3}
+  m_Name: Grizzly Bay Deed Template Library
+  m_EditorClassIdentifier: 
+  factionDatabase: {fileID: 11400000, guid: 28ae6da4bcb7fee42a2bc60aaacd1ca1, type: 2}
+  deedTemplates:
+  - tag: Conversation
+    description: 
+    impact: 0
+    aggression: 0
+    traits:
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    requiresSight: 0
+    radius: 0
+  - tag: Give
+    description: Give a gift to the target
+    impact: 0
+    aggression: 0
+    traits:
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    requiresSight: 0
+    radius: 0
+  - tag: Activities
+    description: 
+    impact: 0
+    aggression: 0
+    traits:
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    requiresSight: 0
+    radius: 0
+  - tag: AffectionHand
+    description: Hold the targets hand
+    impact: 0
+    aggression: 0
+    traits:
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    requiresSight: 0
+    radius: 0
+  - tag: AffectionHug
+    description: Give the target a hug
+    impact: 0
+    aggression: 0
+    traits:
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    requiresSight: 0
+    radius: 0
+  - tag: AffectionKissCheek
+    description: Kiss the target on the cheek
+    impact: 0
+    aggression: 0
+    traits:
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    requiresSight: 0
+    radius: 0
+  - tag: AffectionKiss
+    description: Kiss the target on the lips
+    impact: 0
+    aggression: 0
+    traits:
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    requiresSight: 0
+    radius: 0
+  - tag: Propose
+    description: Propose to the target
+    impact: 100
+    aggression: 0
+    traits:
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    requiresSight: 0
+    radius: 0
+  - tag: 
+    description: 
+    impact: 100
+    aggression: 0
+    traits:
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    requiresSight: 0
+    radius: 0

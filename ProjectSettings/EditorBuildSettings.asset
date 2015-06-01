@@ -7,3 +7,6 @@ EditorBuildSettings:
   m_Scenes:
   - enabled: 1
     path: Assets/Scenes/RelationsTestScene.unity
+  - enabled: 1
+    path: Assets/Pixel Crushers/LoveHate/Third Party Support/ORK Framework Support/Example/ORK
+      Framework Example.unity
