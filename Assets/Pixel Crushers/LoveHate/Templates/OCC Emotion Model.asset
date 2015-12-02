@@ -1,0 +1,224 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a72482600b718b14b8443eafe95c91f8, type: 3}
+  m_Name: OCC Emotion Model
+  m_EditorClassIdentifier: 
+  emotionDefinitions:
+  - name: 41646d69726174696f6e
+    pleasureMin: 22
+    pleasureMax: 76
+    arousalMin: -61
+    arousalMax: 23
+    dominanceMin: -45
+    dominanceMax: 55
+  - name: 476c6f6174696e67
+    pleasureMin: -39
+    pleasureMax: 55
+    arousalMin: -34
+    arousalMax: 56
+    dominanceMin: -6
+    dominanceMax: 94
+  - name: 47726174696669636174696f6e
+    pleasureMin: -4
+    pleasureMax: 82
+    arousalMin: -64
+    arousalMax: 28
+    dominanceMin: -2
+    dominanceMax: 84
+  - name: 477261746974756465
+    pleasureMin: 45
+    pleasureMax: 93
+    arousalMin: -67
+    arousalMax: 49
+    dominanceMin: -50
+    dominanceMax: 60
+  - name: 486170707920666f72
+    pleasureMin: 64
+    pleasureMax: 96
+    arousalMin: -34
+    arousalMax: 68
+    dominanceMin: -12
+    dominanceMax: 86
+  - name: 486f7065
+    pleasureMin: -11
+    pleasureMax: 55
+    arousalMin: -20
+    arousalMax: 80
+    dominanceMin: -75
+    dominanceMax: 30
+  - name: 4a6f79
+    pleasureMin: 64
+    pleasureMax: 100
+    arousalMin: -11
+    arousalMax: 97
+    dominanceMin: 8
+    dominanceMax: 98
+  - name: 4c6f7665
+    pleasureMin: 60
+    pleasureMax: 100
+    arousalMin: -44
+    arousalMax: 72
+    dominanceMin: -22
+    dominanceMax: 82
+  - name: 5072696465
+    pleasureMin: 48
+    pleasureMax: 97
+    arousalMin: -28
+    arousalMax: 68
+    dominanceMin: 14
+    dominanceMax: 100
+  - name: 52656c696566
+    pleasureMin: 52
+    pleasureMax: 94
+    arousalMin: -83
+    arousalMax: 35
+    dominanceMin: -47
+    dominanceMax: 59
+  - name: 536174697366616374696f6e
+    pleasureMin: 39
+    pleasureMax: 91
+    arousalMin: -89
+    arousalMax: 5
+    dominanceMin: -12
+    dominanceMax: 82
+  - name: 416e676572
+    pleasureMin: -85
+    pleasureMax: -39
+    arousalMin: 21
+    arousalMax: 97
+    dominanceMin: -35
+    dominanceMax: 81
+  - name: 4469736170706f696e746d656e74
+    pleasureMin: -88
+    pleasureMax: -42
+    arousalMin: -71
+    arousalMax: -37
+    dominanceMin: -90
+    dominanceMax: 8
+  - name: 4469737472657373
+    pleasureMin: -91
+    pleasureMax: -59
+    arousalMin: -83
+    arousalMax: 21
+    dominanceMin: -92
+    dominanceMax: -2
+  - name: 46656172
+    pleasureMin: -93
+    pleasureMax: -55
+    arousalMin: -9
+    arousalMax: 100
+    dominanceMin: -100
+    dominanceMax: -19
+  - name: 466561727320636f6e6669726d6564
+    pleasureMin: -96
+    pleasureMax: -56
+    arousalMin: -17
+    arousalMax: 100
+    dominanceMin: -100
+    dominanceMax: -4
+  - name: 48617465
+    pleasureMin: -78
+    pleasureMax: -26
+    arousalMin: -45
+    arousalMax: 45
+    dominanceMin: -17
+    dominanceMax: 73
+  - name: 50697479
+    pleasureMin: -56
+    pleasureMax: 2
+    arousalMin: -61
+    arousalMax: 13
+    dominanceMin: -27
+    dominanceMax: 75
+  - name: 52656d6f727365
+    pleasureMin: -75
+    pleasureMax: -9
+    arousalMin: -55
+    arousalMax: 53
+    dominanceMin: -89
+    dominanceMax: 19
+  - name: 526570726f616368
+    pleasureMin: -69
+    pleasureMax: -13
+    arousalMin: 9
+    arousalMax: 85
+    dominanceMin: 5
+    dominanceMax: 95
+  - name: 526573656e746d656e74
+    pleasureMin: -78
+    pleasureMax: -26
+    arousalMin: -51
+    arousalMax: 51
+    dominanceMin: -46
+    dominanceMax: 52
+  - name: 5368616d65
+    pleasureMin: -88
+    pleasureMax: -44
+    arousalMin: -50
+    arousalMax: 60
+    dominanceMin: -100
+    dominanceMax: -17
+  - name: 457875626572616e74
+    pleasureMin: 25
+    pleasureMax: 100
+    arousalMin: 25
+    arousalMax: 100
+    dominanceMin: 25
+    dominanceMax: 100
+  - name: 446570656e64656e74
+    pleasureMin: 25
+    pleasureMax: 100
+    arousalMin: 25
+    arousalMax: 100
+    dominanceMin: -100
+    dominanceMax: -25
+  - name: 52656c61786564
+    pleasureMin: 25
+    pleasureMax: 100
+    arousalMin: -100
+    arousalMax: -25
+    dominanceMin: 25
+    dominanceMax: 100
+  - name: 446f63696c65
+    pleasureMin: 25
+    pleasureMax: 100
+    arousalMin: -100
+    arousalMax: -25
+    dominanceMin: -100
+    dominanceMax: -25
+  - name: 426f726564
+    pleasureMin: -100
+    pleasureMax: -25
+    arousalMin: -100
+    arousalMax: -25
+    dominanceMin: -100
+    dominanceMax: -25
+  - name: 4469736461696e66756c
+    pleasureMin: -100
+    pleasureMax: -25
+    arousalMin: -100
+    arousalMax: -25
+    dominanceMin: 25
+    dominanceMax: 100
+  - name: 416e78696f7573
+    pleasureMin: -100
+    pleasureMax: -25
+    arousalMin: 25
+    arousalMax: 100
+    dominanceMin: -100
+    dominanceMax: -25
+  - name: 486f7374696c65
+    pleasureMin: -100
+    pleasureMax: -25
+    arousalMin: 25
+    arousalMax: 100
+    dominanceMin: 25
+    dominanceMax: 100

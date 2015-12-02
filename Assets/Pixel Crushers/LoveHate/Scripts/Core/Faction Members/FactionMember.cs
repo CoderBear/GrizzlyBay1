@@ -550,9 +550,9 @@ namespace PixelCrushers.LoveHate
 			case Dimension.Is2D:
 				var start2D = new Vector2(start.x, start.y);
 				var end2D = new Vector2(end.x, end.y);
-				var originalRaycastsStartInColliders = Physics2D.raycastsStartInColliders;
+				var originalRaycastsStartInColliders = Physics2D.queriesStartInColliders;
 				RaycastHit2D hitInfo2D = Physics2D.Linecast(start2D, end2D, layerMask);
-				Physics2D.raycastsStartInColliders = originalRaycastsStartInColliders;
+				Physics2D.queriesStartInColliders = originalRaycastsStartInColliders;
 				return (hitInfo2D.collider == null) ? null : hitInfo2D.collider.gameObject;
 			default:
 			case Dimension.Is3D:
