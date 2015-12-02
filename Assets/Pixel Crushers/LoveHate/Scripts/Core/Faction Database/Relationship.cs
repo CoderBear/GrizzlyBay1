@@ -26,6 +26,11 @@ namespace PixelCrushers.LoveHate
 		/// </summary>
 		public int factionID = 0;
 
+        /// <summary>
+        /// Do child factions inherit this relationship?
+        /// </summary>
+        public bool inheritable = true;
+
 		/// <summary>
 		/// Relationship traits. The first trait is always affinity.
 		/// </summary>
@@ -53,13 +58,24 @@ namespace PixelCrushers.LoveHate
 			Assign(factionID, traits);
 		}
 
-		public void Assign(int factionID, float[] traits) 
+        public Relationship(int factionID, bool inheritable, float[] traits)
+        {
+            Assign(factionID, inheritable, traits);
+        }
+
+        public void Assign(int factionID, float[] traits) 
 		{
-			this.factionID = factionID;
-			Traits.Copy(traits, ref this.traits);
+            Assign(factionID, true, traits);
 		}
 
-		public float GetTrait(int index)
+        public void Assign(int factionID, bool inheritable, float[] traits)
+        {
+            this.factionID = factionID;
+            this.inheritable = inheritable;
+            Traits.Copy(traits, ref this.traits);
+        }
+
+        public float GetTrait(int index)
 		{
 			return (0 <= index && index < traits.Length) ? traits[index] : 0;
 		}
@@ -86,16 +102,27 @@ namespace PixelCrushers.LoveHate
 		/// <param name="traits">Traits.</param>
 		public static Relationship GetNew(int factionID, float[] traits) 
 		{
-			var relationship = pool.Get();
-			relationship.Assign(factionID, traits);
-			return relationship;
+            return GetNew(factionID, true, traits);
 		}
 
-		/// <summary>
-		/// Releases a relationship object back to the pool.
-		/// </summary>
-		/// <param name="deed">Deed.</param>
-		public static void Release(Relationship relationship)
+        /// <summary>
+        /// Gets a new relationship from the pool.
+        /// </summary>
+        /// <returns>The new relationship.</returns>
+        /// <param name="factionID">Faction ID.</param>
+        /// <param name="traits">Traits.</param>
+        public static Relationship GetNew(int factionID, bool inheritable, float[] traits)
+        {
+            var relationship = pool.Get();
+            relationship.Assign(factionID, inheritable, traits);
+            return relationship;
+        }
+
+        /// <summary>
+        /// Releases a relationship object back to the pool.
+        /// </summary>
+        /// <param name="deed">Deed.</param>
+        public static void Release(Relationship relationship)
 		{
 			pool.Release(relationship);
 		}

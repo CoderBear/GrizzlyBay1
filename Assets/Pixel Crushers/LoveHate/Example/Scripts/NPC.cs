@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Text;
 
 namespace PixelCrushers.LoveHate.Example
 {
@@ -19,28 +20,28 @@ namespace PixelCrushers.LoveHate.Example
 		public float powerLevel = 1;
 		public float selfPerceivedPowerLevel = 1;
 
-		private Animator animator;
+		private Animator m_animator;
 
-		private FactionMember member;
-
-		private InteractionUI m_interactionUI;
+		public FactionMember factionMember { get; private set; }
 
 		private const float UpdateFrequency = 0.5f;
 
 		private Vector3 m_startPosition;
 
 		// Start() does basic setup and also registers custom power level
-		// delegates and starts the wander coroutine.
+		// delegates and starts wandering.
 		protected override void Start()
 		{
 			base.Start();
 			m_startPosition = transform.position;
-			animator = GetComponent<Animator>();
-			m_interactionUI = FindObjectOfType<InteractionUI>();
-			member = GetComponent<FactionMember>();
-			member.GetPowerLevel = GetPowerLevel;
-			member.GetSelfPerceivedPowerLevel = GetSelfPerceivedPowerLevel;
-			StartCoroutine(Wander());
+			m_animator = GetComponent<Animator>();
+			factionMember = GetComponent<FactionMember>();
+			if (factionMember != null)
+			{
+				factionMember.GetPowerLevel = GetPowerLevel;
+				factionMember.GetSelfPerceivedPowerLevel = GetSelfPerceivedPowerLevel;
+			}
+			Wander();
 		}
 
 		private float GetPowerLevel()
@@ -52,30 +53,35 @@ namespace PixelCrushers.LoveHate.Example
 		{
 			return selfPerceivedPowerLevel;
 		}
-		
+
 		private void OnCollisionEnter2D(Collision2D coll)
 		{
-			StopAllCoroutines();
-			StartCoroutine(UpdateFaction());
+			if (coll.gameObject.CompareTag("Player"))
+			{
+				Idle();
+			}
 		}
 
 		private void OnCollisionExit2D(Collision2D coll)
 		{
-			StopAllCoroutines();
-			m_interactionUI.Watch(null);
-			StartCoroutine(Wander());
-		}
-
-		private IEnumerator UpdateFaction()
-		{
-			while (true)
+			if (coll.gameObject.CompareTag("Player"))
 			{
-				m_interactionUI.Watch(GetComponent<FactionMember>());
-				yield return new WaitForSeconds(UpdateFrequency);
+				Wander();
 			}
 		}
 
-		private IEnumerator Wander()
+		public void Idle()
+		{
+			StopAllCoroutines();
+		}
+
+		public void Wander()
+		{
+			StopAllCoroutines();
+			StartCoroutine(WanderCoroutine());
+		}
+		
+		private IEnumerator WanderCoroutine()
 		{
 			const float MaxIdle = 5;
 			const float MaxRange = 3;
@@ -102,17 +108,66 @@ namespace PixelCrushers.LoveHate.Example
 		// animation.
 		public void OnWitnessDeed(Rumor rumor)
 		{
-			if (member == null || rumor == null) return;
+			if (factionMember == null || rumor == null) return;
 			if (rumor.pleasure < -0.25)
 			{
-				animator.SetTrigger("Sad");
+				m_animator.SetTrigger("Sad");
 			} 
 			else if (rumor.pleasure > 0.25)
 			{
-				animator.SetTrigger("Happy");
+				m_animator.SetTrigger("Happy");
 			}
 		}
 		
+		public string GetSummaryText()
+		{
+			if (factionMember == null) return string.Empty;
+			StringBuilder sb = new StringBuilder();
+			sb.AppendFormat("NPC: {0}\n", name);
+			sb.AppendFormat("Faction: {0}\n", factionMember.faction.name);
+			sb.AppendFormat("Description: {0}\n", factionMember.faction.description);
+			sb.Append("\nParents:\n");
+			for (int p = 0; p < factionMember.faction.parents.Length; p++)
+			{
+				var parentID = factionMember.faction.parents[p];
+				sb.AppendFormat("\t{0}\n", factionMember.factionManager.GetFaction(parentID).name);
+			}
+			
+			sb.Append("\nPAD:\n");
+			sb.AppendFormat("\tPleasure: {0}\n", factionMember.pad.pleasure);
+			sb.AppendFormat("\tArousal: {0}\n" , factionMember.pad.arousal);
+			sb.AppendFormat("\tDominance: {0}\n", factionMember.pad.dominance);
+			sb.AppendFormat("\tHappiness: {0}\n", factionMember.pad.happiness);
+			sb.AppendFormat("\tTemperament: {0}\n", factionMember.pad.GetTemperament());
+			
+			sb.Append("\nTraits:\n");
+			for (int i = 0; i < factionMember.factionManager.factionDatabase.personalityTraitDefinitions.Length; i++)
+			{
+				sb.AppendFormat("\t{0}: {1}\n", factionMember.factionManager.factionDatabase.personalityTraitDefinitions[i].name, factionMember.faction.traits[i]);
+			}
+			
+			sb.Append("\nRelationships:\n");
+			for (int r = 0; r < factionMember.faction.relationships.Count; r++)
+			{
+				var relationship = factionMember.faction.relationships[r];
+				sb.AppendFormat("\t{0}: {1}\n", factionMember.factionManager.GetFaction(relationship.factionID).name, relationship.affinity);
+			}
+			
+			sb.Append("\nMemories:\n");
+			for (int m = 0; m < factionMember.longTermMemory.Count; m++)
+			{
+				var rumor = factionMember.longTermMemory[m];
+				sb.AppendFormat("\t{0} {1} {2}: impact {3}", factionMember.factionManager.GetFaction(rumor.actorFactionID).name,
+				                rumor.tag, factionMember.factionManager.GetFaction(rumor.targetFactionID).name, rumor.impact);
+				if (rumor.count > 1)
+				{
+					sb.AppendFormat(" (x{0})", rumor.count);
+				}
+				sb.Append("\n");
+			}
+			return sb.ToString();
+		}
+			
 	}
 
 }

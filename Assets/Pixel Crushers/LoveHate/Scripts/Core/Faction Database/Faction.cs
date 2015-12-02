@@ -50,6 +50,12 @@ namespace PixelCrushers.LoveHate
 		/// </summary>
 		public List<Relationship> relationships = new List<Relationship>();
 
+        /// <summary>
+        /// If nonzero, when setting a relationship to a subject also modify relationships to the 
+        /// subject's parents scaled by this amount.
+        /// </summary>
+        public float percentJudgeParents = 0;
+
 		public Faction() {}
 
 		public Faction(int id, string name)
@@ -128,6 +134,16 @@ namespace PixelCrushers.LoveHate
 			return FindPersonalRelationship(factionID, out relationship);
 		}
 
+        /// <summary>
+        /// Removes the personal relationship record that this faction has for another faction, if
+        /// that relationship record exists.
+        /// </summary>
+        /// <param name="factionID">Faction ID.</param>
+        public void RemovePersonalRelationship(int factionID)
+        {
+            relationships.RemoveAll(r => r.factionID == factionID);
+        }
+
 		/// <summary>
 		/// Gets a personal relationship trait to another faction.
 		/// </summary>
@@ -165,12 +181,26 @@ namespace PixelCrushers.LoveHate
 			}
 		}
 
-		/// <summary>
-		/// Gets the personal affinity to another faction.
-		/// </summary>
-		/// <returns>The personal affinity, or `0` if no personal relationship.</returns>
-		/// <param name="factionID">Faction ID.</param>
-		public float GetPersonalAffinity(int factionID)
+        /// <summary>
+        /// Sets a personal relationship inheritable or not inheritable.
+        /// </summary>
+        /// <param name="factionID">Faction ID</param>
+        /// <param name="value">Inheritable value</param>
+        public void SetPersonalRelationshipInheritable(int factionID, bool inheritable)
+        {
+            Relationship relationship;
+            if (FindPersonalRelationship(factionID, out relationship))
+            {
+                relationship.inheritable = inheritable;
+            }
+        }
+
+        /// <summary>
+        /// Gets the personal affinity to another faction.
+        /// </summary>
+        /// <returns>The personal affinity, or `0` if no personal relationship.</returns>
+        /// <param name="factionID">Faction ID.</param>
+        public float GetPersonalAffinity(int factionID)
 		{
 			return GetPersonalRelationshipTrait(factionID, Relationship.AffinityTraitIndex);
 		}

@@ -20,8 +20,9 @@ namespace PixelCrushers.LoveHate
 			public bool relationshipTraitDefsFoldout = false;
 			public bool presetsFoldout = false;
 			public bool factionsFoldout = false;
+            public bool inheritedRelationshipsFoldout = false;
 		}
-		
+
 		private static Dictionary<UnityEngine.Object, FactionDatabaseFoldouts> foldouts = new Dictionary<UnityEngine.Object, FactionDatabaseFoldouts>();
 		
 		private ReorderableList m_personalityTraitDefList;
@@ -33,8 +34,10 @@ namespace PixelCrushers.LoveHate
 		private ReorderableList m_factionTraitList;
 		private ReorderableList m_factionRelationshipList;
 		private ReorderableList m_factionRelationshipTraitList;
+        private ReorderableList m_factionInheritedRelationshipsList;
 		private int m_personalityTraitDefIndex;
 		private int m_relationshipTraitDefIndex;
+        private List<InheritedRelationship> m_inheritedRelationships;
 		
 		private void OnEnable()
 		{
@@ -100,7 +103,8 @@ namespace PixelCrushers.LoveHate
 			if (foldouts[target].personalityTraitDefsFoldout)
 			{
 				m_personalityTraitDefList.DoLayoutList();
-			}
+                EditorGUILayout.PropertyField(serializedObject.FindProperty("traitInheritanceType"));
+            }
 		}
 		
 		private void OnDrawPersonalityTraitDefListHeader(Rect rect)
@@ -199,13 +203,14 @@ namespace PixelCrushers.LoveHate
 		private void DrawRelationshipTraitDefSection()
 		{
 			foldouts[target].relationshipTraitDefsFoldout = EditorGUILayout.Foldout(foldouts[target].relationshipTraitDefsFoldout, "Relationship Traits");
-			if (foldouts[target].relationshipTraitDefsFoldout)
+            if (foldouts[target].relationshipTraitDefsFoldout)
 			{
 				m_relationshipTraitDefList.DoLayoutList();
-			}
-		}
-		
-		private void OnDrawRelationshipTraitDefListHeader(Rect rect)
+                DrawRelationshipInheritanceTypeDropdown();
+            }
+        }
+
+        private void OnDrawRelationshipTraitDefListHeader(Rect rect)
 		{  
 			EditorGUI.LabelField(rect, "Relationship Traits");
 		}
@@ -274,12 +279,24 @@ namespace PixelCrushers.LoveHate
 				}
 			}
 		}
-		
-		#endregion
-		
-		#region Preset List
-		
-		private void SetupPresetList()
+
+        private void DrawRelationshipInheritanceTypeDropdown()
+        {
+            EditorGUI.BeginChangeCheck();
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("relationshipInheritanceType"));
+            var changed = EditorGUI.EndChangeCheck();
+            if (changed && m_factionInheritedRelationshipsList != null)
+            {
+                SetupInheritedRelationshipList();
+            }
+
+        }
+
+        #endregion
+
+        #region Preset List
+
+        private void SetupPresetList()
 		{
 			m_presetList = new ReorderableList(
 				serializedObject, serializedObject.FindProperty("presets"), 
@@ -515,6 +532,8 @@ namespace PixelCrushers.LoveHate
 			for (int j = 0; j < m_personalityTraitDefList.serializedProperty.arraySize; j++) {
 				values.GetArrayElementAtIndex(j).floatValue = 0;
 			}
+            element.FindPropertyRelative("parents").arraySize = 0;
+            element.FindPropertyRelative("relationships").arraySize = 0;
 		}
 		
 		private void OnRemoveFaction(ReorderableList list)
@@ -653,7 +672,9 @@ namespace PixelCrushers.LoveHate
 			m_factionRelationshipList.onRemoveCallback = OnRemoveFactionRelationship;
 
 			m_factionRelationshipTraitList = null;
-		}
+            m_factionInheritedRelationshipsList = null;
+            m_inheritedRelationships = null;
+        }
 		
 		private void DrawFactionEditSection()
 		{
@@ -665,6 +686,8 @@ namespace PixelCrushers.LoveHate
 			{
 				m_factionRelationshipTraitList.DoLayoutList();
 			}
+            DrawInheritedRelationshipsSection();
+            DrawPercentJudgeParentsSection();
 		}
 
 		private SerializedProperty FindFaction(int factionID)
@@ -748,7 +771,19 @@ namespace PixelCrushers.LoveHate
 		private void OnAddFactionTraitsDropdown(Rect rect, ReorderableList list)
 		{
 			var menu = new GenericMenu();
-			for (int i = 0; i < m_presetList.serializedProperty.arraySize; i++)
+            var faction = m_factionList.serializedProperty.GetArrayElementAtIndex(m_factionList.index);
+            var hasParents = (faction.FindPropertyRelative("parents").arraySize > 0);
+            if (hasParents)
+            {
+                menu.AddItem(new GUIContent("(Average from parents)"), false, OnSelectAverageTraitsMenuItem, faction.FindPropertyRelative("id").intValue);
+                menu.AddItem(new GUIContent("(Sum from parents)"), false, OnSelectSumTraitsMenuItem, faction.FindPropertyRelative("id").intValue);
+            }
+            else
+            {
+                menu.AddDisabledItem(new GUIContent("(Average from parents)"));
+                menu.AddDisabledItem(new GUIContent("(Sum from parents)"));
+            }
+            for (int i = 0; i < m_presetList.serializedProperty.arraySize; i++)
 			{
 				var preset = m_presetList.serializedProperty.GetArrayElementAtIndex(i);
 				var presetName = preset.FindPropertyRelative("name").stringValue;
@@ -770,10 +805,24 @@ namespace PixelCrushers.LoveHate
 			}
 			serializedObject.ApplyModifiedProperties();
 		}
-		
-		//----- Relationships: -----
-		
-		private void OnDrawFactionRelationshipListHeader(Rect rect)
+
+        private void OnSelectAverageTraitsMenuItem(object factionID)
+        {
+            serializedObject.ApplyModifiedProperties();
+            (target as FactionDatabase).InheritTraitsFromParents((int)factionID, FactionInheritanceType.Average);
+            serializedObject.Update();
+        }
+
+        private void OnSelectSumTraitsMenuItem(object factionID)
+        {
+            serializedObject.ApplyModifiedProperties();
+            (target as FactionDatabase).InheritTraitsFromParents((int)factionID, FactionInheritanceType.Sum);
+            serializedObject.Update();
+        }
+
+        //----- Relationships: -----
+
+        private void OnDrawFactionRelationshipListHeader(Rect rect)
 		{  
 			EditorGUI.LabelField(rect, "Relationships");
 		}
@@ -785,12 +834,16 @@ namespace PixelCrushers.LoveHate
 			if (otherFaction == null) return;
 			rect.y += 2;
 			var m_nameWidth = Mathf.Clamp(rect.width / 4, 80, 200);
-			var valueWidth = rect.width - m_nameWidth - 4;
-			EditorGUI.BeginDisabledGroup(true);
+            var valueWidth = rect.width - m_nameWidth - 18;
+            EditorGUI.BeginDisabledGroup(true);
 			EditorGUI.PropertyField(
 				new Rect(rect.x, rect.y, m_nameWidth, EditorGUIUtility.singleLineHeight),
 				otherFaction.FindPropertyRelative("name"), GUIContent.none);
 			EditorGUI.EndDisabledGroup();
+            var inheritable = relationship.FindPropertyRelative("inheritable");
+            inheritable.boolValue = EditorGUI.Toggle(
+                new Rect(rect.x + m_nameWidth + 2, rect.y, 16, EditorGUIUtility.singleLineHeight),
+                new GUIContent(string.Empty, "Inheritable"), inheritable.boolValue);
 			var traits = relationship.FindPropertyRelative("traits");
 			if (traits.arraySize != m_relationshipTraitDefList.serializedProperty.arraySize) traits.arraySize = m_relationshipTraitDefList.serializedProperty.arraySize;
 			EditorGUI.Slider(
@@ -820,6 +873,7 @@ namespace PixelCrushers.LoveHate
 			relationships.arraySize++;
 			var relationship = relationships.GetArrayElementAtIndex(relationships.arraySize - 1);
 			relationship.FindPropertyRelative("factionID").intValue = (int) factionID;
+            relationship.FindPropertyRelative("inheritable").boolValue = true;
 			var traits = relationship.FindPropertyRelative("traits");
 			if (traits.arraySize != m_relationshipTraitDefList.serializedProperty.arraySize) traits.arraySize = m_relationshipTraitDefList.serializedProperty.arraySize;
 			traits.GetArrayElementAtIndex(0).floatValue = 0;
@@ -925,12 +979,76 @@ namespace PixelCrushers.LoveHate
 				new Rect(rect.x + rect.width - valueWidth, rect.y, valueWidth, EditorGUIUtility.singleLineHeight),
 				element, -100, 100, GUIContent.none);
 		}
-		
-		#endregion
-		
-		#region Menu Item
-		
-		[MenuItem("Assets/Create/Love\u2215Hate/Faction Database", false, 0)]
+
+        //----- Inherited relationships (for currently-selected faction): -----
+
+        private void DrawInheritedRelationshipsSection()
+        {
+            EditorGUI.indentLevel++;
+            foldouts[target].inheritedRelationshipsFoldout = EditorGUILayout.Foldout(foldouts[target].inheritedRelationshipsFoldout, "Inherited Relationships");
+            if (foldouts[target].inheritedRelationshipsFoldout)
+            {
+                if (m_inheritedRelationships == null || m_factionInheritedRelationshipsList == null)
+                {
+                    SetupInheritedRelationshipList();
+                }
+                m_factionInheritedRelationshipsList.DoLayoutList();
+                EditorGUILayout.BeginHorizontal();
+                GUILayout.FlexibleSpace();
+                if (GUILayout.Button("Refresh", GUILayout.Width(64)))
+                {
+                    SetupInheritedRelationshipList();
+                }
+                EditorGUILayout.EndHorizontal();
+            }
+            EditorGUI.indentLevel--;
+        }
+
+        private void SetupInheritedRelationshipList()
+        {
+            serializedObject.ApplyModifiedProperties();
+            var factionID = m_factionList.serializedProperty.GetArrayElementAtIndex(m_factionList.index).FindPropertyRelative("id").intValue;
+            m_inheritedRelationships = InheritedRelationship.GetInheritedRelationships(target as FactionDatabase, factionID);
+            m_factionInheritedRelationshipsList = new ReorderableList(m_inheritedRelationships, typeof(Relationship), false, true, false, false);
+            m_factionInheritedRelationshipsList.drawHeaderCallback = OnDrawInheritedRelationshipsListHeader;
+            m_factionInheritedRelationshipsList.drawElementCallback = OnDrawInheritedRelationshipsListElement;
+        }
+
+        private void OnDrawInheritedRelationshipsListHeader(Rect rect)
+        {
+            EditorGUI.LabelField(rect, "Inherited Relationships");
+        }
+
+        private void OnDrawInheritedRelationshipsListElement(Rect rect, int index, bool isActive, bool isFocused)
+        {
+            rect.width -= 16;
+            rect.x += 16;
+            rect.y += 2;
+            var nameWidth = rect.width / 2;
+            var valueWidth = rect.width - nameWidth - 4;
+            EditorGUI.BeginDisabledGroup(true);
+            EditorGUI.TextField(
+                new Rect(rect.x, rect.y, nameWidth, EditorGUIUtility.singleLineHeight),
+                m_inheritedRelationships[index].name);
+            EditorGUI.Slider(
+                new Rect(rect.x + rect.width - valueWidth, rect.y, valueWidth, EditorGUIUtility.singleLineHeight),
+                GUIContent.none, m_inheritedRelationships[index].affinity, -100, 100);
+            EditorGUI.EndDisabledGroup();
+        }
+
+        //----- Percent judge parents -----
+
+        public void DrawPercentJudgeParentsSection()
+        {
+            EditorGUILayout.Slider(m_factionList.serializedProperty.GetArrayElementAtIndex(m_factionList.index).FindPropertyRelative("percentJudgeParents"),
+                0, 100, new GUIContent("% Judge Parents", "If nonzero, when adjusting a relationship to a subject at runtime, also adjust relationships to the subject's parents by this percent"));
+        }
+
+        #endregion
+
+        #region Menu Item
+
+        [MenuItem("Assets/Create/Love\u2215Hate/Faction Database", false, 0)]
 		public static void CreateFactionDatabase() {
 			var asset = ScriptableObject.CreateInstance<FactionDatabase>() as FactionDatabase;
 			asset.Initialize();

@@ -1,7 +1,7 @@
-/*
+﻿/*
 --------------------------
         Love/Hate
-      Version 1.1
+      Version 1.71
         
 Copyright © Pixel Crushers
 --------------------------
@@ -15,8 +15,8 @@ please contact us any time at support@pixelcrushers.com.
 
 Getting Started:
 ----------------
-o Read the manual in Assets/Pixel Crushers/Love/Hate.
-o Play the scene in Assets/Pixel Crushers/Love/Hate/Example.
+o Read the manual in Assets/Pixel Crushers/LoveHate.
+o Play the scene in Assets/Pixel Crushers/LoveHate/Example.
 
 
 Need Help?

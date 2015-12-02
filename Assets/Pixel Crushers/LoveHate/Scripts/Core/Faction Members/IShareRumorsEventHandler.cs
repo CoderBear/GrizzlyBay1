@@ -10,6 +10,11 @@ namespace PixelCrushers.LoveHate
 	public interface IShareRumorsEventHandler : IEventSystemHandler 
 	{
 
+		/// <summary>
+		/// Raises the share rumors event.
+		/// </summary>
+		/// <param name="other">The other faction member that this faction
+		/// member is sharing deeds with.</param>
 		void OnShareRumors(FactionMember other);
 
 	}

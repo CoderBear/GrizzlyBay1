@@ -11,6 +11,8 @@ namespace PixelCrushers.LoveHate.Example
 	public class Mover2D : MonoBehaviour
 	{
 
+		public bool controlMovement = true;
+
 		public Vector3 moveToPosition;
 
 		protected Rigidbody2D rb;
@@ -28,9 +30,12 @@ namespace PixelCrushers.LoveHate.Example
 		
 		protected virtual void FixedUpdate()
 		{
-			var x = Mathf.Clamp(moveToPosition.x, cameraRect.xMin, cameraRect.xMax);
-			var y = Mathf.Clamp(moveToPosition.y, cameraRect.yMin, cameraRect.yMax);
-			rb.MovePosition(new Vector2(x, y));
+			if (controlMovement)
+			{
+				var x = Mathf.Clamp(moveToPosition.x, cameraRect.xMin, cameraRect.xMax);
+				var y = Mathf.Clamp(moveToPosition.y, cameraRect.yMin, cameraRect.yMax);
+				rb.MovePosition(new Vector2(x, y));
+			}
 		}
 
 	}

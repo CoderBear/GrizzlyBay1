@@ -57,10 +57,10 @@ MonoBehaviour:
     relationships:
     - factionID: 2
       traits:
-      - -80
+      - -50
     - factionID: 1
       traits:
-      - 80
+      - 100
   - id: 2
     name: 42616e64697473
     description: 54686520706172656e742066616374696f6e20666f722062616e64697473
@@ -76,7 +76,7 @@ MonoBehaviour:
       - -50
     - factionID: 2
       traits:
-      - 80
+      - 100
   - id: 3
     name: 5072696e63657373
     description: 46616374696f6e20666f7220746865205072696e63657373
@@ -87,12 +87,9 @@ MonoBehaviour:
     - -30
     - 20
     relationships:
-    - factionID: 1
-      traits:
-      - 60
     - factionID: 2
       traits:
-      - -50
+      - -70
     - factionID: 5
       traits:
       - -80
@@ -121,7 +118,7 @@ MonoBehaviour:
     relationships:
     - factionID: 3
       traits:
-      - -40
+      - -80
   - id: 6
     name: 50696e6b204769726c
     description: 46616374696f6e20666f722050696e6b204769726c2c20612062616e64697420616e6420736973746572206f6620746865205072696e63657373

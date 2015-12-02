@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+﻿/*
+ * This script is no longer used by the example scenes. The functionality
+ * has been moved to RudimentaryPlayerController2D.
+ * 
+using UnityEngine;
 
 namespace PixelCrushers.LoveHate.Example
 {
@@ -39,3 +43,4 @@ namespace PixelCrushers.LoveHate.Example
 	}
 
 }
+*/

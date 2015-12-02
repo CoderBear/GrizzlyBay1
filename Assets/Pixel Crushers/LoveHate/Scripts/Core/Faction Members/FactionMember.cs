@@ -8,7 +8,7 @@ using System.Collections.Generic;
 namespace PixelCrushers.LoveHate
 {
 
-	public delegate bool CanSeeDelegate(FactionMember other, Dimension dimension);
+	public delegate bool CanSeeDelegate(FactionMember actor, Dimension dimension);
 
 	public delegate Rumor EvaluateRumorDelegate(Rumor rumor, FactionMember source);
 
@@ -45,6 +45,22 @@ namespace PixelCrushers.LoveHate
 		/// The current Pleasure-Arousal-Dominance model emotional state.
 		/// </summary>
 		public Pad pad = new Pad();
+
+		/// <summary>
+		/// Specifies how much trait alignment impacts rumor evaluation.
+		/// A value of 100 means it can double the impact if the deed's
+		/// traits align perfectly with the faction member's.
+		/// </summary>
+		[Range(0,100)]
+		public float traitAlignmentImportance = 50;
+
+		/// <summary>
+		/// Specifies how much arousal impacts rumor evaluation. A value
+		/// of 100 means it can double the impact if the faction member's
+		/// arousal is at maximum.
+		/// </summary>
+		[Range(0,100)]
+		public float arousalImportance = 50;
 		
 		/// <summary>
 		/// Only acknowledge deeds whose impact is above this threshold.
@@ -57,6 +73,13 @@ namespace PixelCrushers.LoveHate
 		/// </summary>
 		public AnimationCurve acclimatizationCurve = new AnimationCurve(
 			new Keyframe[2] { new Keyframe(0, 1), new Keyframe(20, 0) } );
+		
+		/// <summary>
+		/// Specifies how much the difference in power levels affects
+		/// the dominance experienced by aggressive actions.
+		/// </summary>
+		public AnimationCurve powerDifferenceCurve = new AnimationCurve(
+			new Keyframe[3] { new Keyframe(-10, 0), new Keyframe(1, 0.1f), new Keyframe(10, 1) } );
 		
 		/// <summary>
 		/// The max memories to store. Older memories are dropped if over the limit.
@@ -108,6 +131,12 @@ namespace PixelCrushers.LoveHate
 		/// </summary>
 		/// <value>The faction.</value>
 		public Faction faction { get { return GetMyFaction(); } }
+
+		/// <summary>
+		/// Gets the runtime faction manager. 
+		/// </summary>
+		/// <value>The runtime faction manager.</value>
+		public FactionManager runtimeFactionManager { get { return GetRuntimeFactionManager(); } }
 
 		/// <summary>
 		/// Assign this delegate to override the default perception check method, which 
@@ -177,6 +206,7 @@ namespace PixelCrushers.LoveHate
 			GetPowerLevel = DefaultGetPowerLevel;
 			GetSelfPerceivedPowerLevel = DefaultGetPowerLevel;
 			m_currentMemoryCleanupFrequency = memoryCleanupFrequency;
+			FindResources();
 		}
 
 		protected virtual void Start()
@@ -210,6 +240,29 @@ namespace PixelCrushers.LoveHate
 				Register();
 			}
 			return m_faction;
+		}
+
+		private FactionManager GetRuntimeFactionManager() 
+		{
+			if (factionManager == null) 
+			{
+				FindResources();
+			}
+			return factionManager;
+		}
+
+		/// <summary>
+		/// Switches to a new faction. It may be more appropriate in many cases to add
+		/// or delete a parent faction rather than changing the member's own faction.
+		/// </summary>
+		/// <param name="newFactionID">Faction ID of the member's new faction.</param>
+		public void SwitchFaction(int newFactionID)
+		{
+			Unregister();
+			factionID = newFactionID;
+			m_faction = null;
+			GetMyFaction();
+			Register();
 		}
 		
 		protected virtual void OnEnable()
@@ -283,7 +336,7 @@ namespace PixelCrushers.LoveHate
 				var rumor = shortTermMemory[i];
 				if (rumor.isExpiredFromShortTerm)
 				{
-					pad.Modify(0, -rumor.pleasure, -rumor.arousal, -rumor.dominance);
+					ModifyPAD(0, -rumor.pleasure, -rumor.arousal, -rumor.dominance);
 					shortTermMemory.RemoveAt(i);
 				}
 			}
@@ -297,6 +350,7 @@ namespace PixelCrushers.LoveHate
 				if (rumor.isExpiredFromLongTerm)
 				{
 					longTermMemory.RemoveAt(i);
+					ExecuteEvents.Execute<IForgetDeedEventHandler>(gameObject, null, (x,y)=>x.OnForgetDeed(rumor));
 					Rumor.Release(rumor);
 				}
 			}
@@ -367,6 +421,7 @@ namespace PixelCrushers.LoveHate
 		{
 			AddRumorToMemory(rumor, shortTermMemory);
 			AddRumorToMemory(rumor, longTermMemory);
+			ExecuteEvents.Execute<IRememberDeedEventHandler>(gameObject, null, (x,y)=>x.OnRememberDeed(rumor));
 		}
 		
 		private void AddRumorToMemory(Rumor rumor, List<Rumor> memory)
@@ -385,6 +440,12 @@ namespace PixelCrushers.LoveHate
 			{
 				memory.Add(rumor);
 			}
+		}
+
+		public void ModifyPAD(float happinessChange, float pleasureChange, float arousalChange, float dominanceChange)
+		{
+			pad.Modify(happinessChange, pleasureChange, arousalChange, dominanceChange);
+			ExecuteEvents.Execute<IModifyPadDeedEventHandler>(gameObject, null, (x,y)=>x.OnModifyPad(happinessChange, pleasureChange, arousalChange, dominanceChange));
 		}
 
 		#endregion
@@ -499,15 +560,18 @@ namespace PixelCrushers.LoveHate
 			return FindResources() ? factionManager.GetAffinity(faction.name, subjectFactionName) : 0;
 		}
 
-		#endregion
+        #endregion
 
-		#region Witness Deed
+        #region Witness Deed
 
-		/// <summary>
-		/// Witnesses a deed.
-		/// </summary>
-		/// <param name="deed">Deed.</param>
-		public void WitnessDeed(Deed deed, FactionMember actor, bool requiresSight, Dimension dimension = Dimension.Is3D)
+        /// <summary>
+        /// Witnesses a deed.
+        /// </summary>
+        /// <param name="deed">Deed.</param>
+        /// <param name="actor">Actor who committed deed.</param>
+        /// <param name="requiresSight">If `true`, must be able to see actor to witness deed.</param>
+        /// <param name="dimension">Specifies how to determine line of sight (2D or 3D).</param>
+        public void WitnessDeed(Deed deed, FactionMember actor, bool requiresSight, Dimension dimension = Dimension.Is3D)
 		{
 			if (!FindResources()) return;
 			if (!requiresSight || CanSee(actor, dimension))
@@ -515,7 +579,7 @@ namespace PixelCrushers.LoveHate
 				if (factionManager.debug)
 				{
 					Debug.Log(string.Format("Love/Hate: " +
-					                        faction.name + ".WitnessDeed actor:" + factionManager.GetFaction(deed.actorFactionID).name + 
+					                        name + ".WitnessDeed actor:" + factionManager.GetFaction(deed.actorFactionID).name + 
 					                        " target:" + factionManager.GetFaction(deed.targetFactionID).name +
 					                        " impact:" + deed.impact), this);
 				}
@@ -534,30 +598,25 @@ namespace PixelCrushers.LoveHate
 			}
 		}
 		
-		private bool DefaultCanSee(FactionMember other, Dimension dimension)
+		public bool DefaultCanSee(FactionMember actor, Dimension dimension)
 		{
-			if (other == null) return false;
+			if (actor == null) return false;
 			var me = (eyes == null) ? transform : eyes;
-			var hit = Raycast(me.position, other.transform.position, sightLayerMask, dimension);
+			var hit = Raycast(me, actor.transform, sightLayerMask, dimension);
 			var hitFactionMember = (hit == null) ? null : hit.GetComponentInChildren<FactionMember>() ?? hit.GetComponentInParent<FactionMember>();
-			return (hitFactionMember == other);
+			return (hitFactionMember == actor);
 		}
 
-		private GameObject Raycast(Vector3 start, Vector3 end, LayerMask layerMask, Dimension dimension)
+		private GameObject Raycast(Transform me, Transform other, LayerMask layerMask, Dimension dimension)
 		{
 			switch (dimension)
 			{
 			case Dimension.Is2D:
-				var start2D = new Vector2(start.x, start.y);
-				var end2D = new Vector2(end.x, end.y);
-				var originalRaycastsStartInColliders = Physics2D.queriesStartInColliders;
-				RaycastHit2D hitInfo2D = Physics2D.Linecast(start2D, end2D, layerMask);
-				Physics2D.queriesStartInColliders = originalRaycastsStartInColliders;
-				return (hitInfo2D.collider == null) ? null : hitInfo2D.collider.gameObject;
+                return MorePhysics2D.Raycast2DWithoutSelf(me, other, layerMask);
 			default:
 			case Dimension.Is3D:
 				RaycastHit hitInfo;
-				var hit = Physics.Linecast(start, end, out hitInfo, layerMask);
+				var hit = Physics.Linecast(me.position, other.position, out hitInfo, layerMask);
 				return hit ? hitInfo.collider.gameObject : null;
 			}
 		}
@@ -594,7 +653,7 @@ namespace PixelCrushers.LoveHate
 		/// the existing rumor..</returns>
 		/// <param name="rumor">Rumor.</param>
 		/// <param name="source">Source.</param>
-		private Rumor DefaultEvaluateRumor(Rumor rumor, FactionMember source)
+		public Rumor DefaultEvaluateRumor(Rumor rumor, FactionMember source)
 		{
 			if ((rumor == null) || (source == null) || KnowsAboutDeed(rumor.deedGuid) || !FindResources()) return null;
 
@@ -616,49 +675,17 @@ namespace PixelCrushers.LoveHate
 			var impactNorm = rumor.impact / 100;							//[-1,+1]
 			var changeInAffinityToActorNorm = confidenceNorm * impactNorm * affinityToTargetNorm; //[-1,+1]
 
-			// Modify the opinion by how well the deed's values align with our own:
-			var rumorValuesAlignment = Traits.Alignment(faction.traits, rumor.traits);	//[-1,+1]
-			var valueImpactNorm = (changeInAffinityToActorNorm * rumorValuesAlignment) / 2; //[-0.5,+0.5]
-			changeInAffinityToActorNorm = Mathf.Clamp(changeInAffinityToActorNorm + valueImpactNorm, -1, 1);//[-1,+1]
+			// traitImpactNorm[-1,+1]: Modifies the opinion by how well the deed's traits align with our own:
+			var traitAlignment = Traits.Alignment(faction.traits, rumor.traits); //[-1,+1]
+			var traitImpactNorm = Mathf.Approximately(0, traitAlignmentImportance) ? 0 : 
+                (traitAlignment * Mathf.Abs(changeInAffinityToActorNorm)) / (traitAlignmentImportance / 100); //[-1,+1]
 
-			// Modify the opinion by our temperament (happy, aroused, etc.):
-			var pleasureImpactNorm = changeInAffinityToActorNorm * (pad.pleasure / 200); //[-0.5,+0.5]
-			var arousalImpactNorm = changeInAffinityToActorNorm * (pad.arousal / 200);   //[-0.5,+0.5]
-			var padImpactNorm = pleasureImpactNorm + arousalImpactNorm;
-			changeInAffinityToActorNorm = Mathf.Clamp(changeInAffinityToActorNorm + padImpactNorm, -1, 1);//[-1,+1]
+			// arousalImpactNorm[-1,+1]: Modifies the opinion by our arousal level:
+			var arousalImpactNorm = Mathf.Approximately(0, arousalImportance) ? 0 :
+                changeInAffinityToActorNorm * (pad.arousal / 100) * (arousalImportance / 100);   //[-0.5,+0.5]
 
-			var changeInAffinityToActor = changeInAffinityToActorNorm * 100; //[-100,+100]
-
-			if (debugEvalFunc)
-			{
-				Debug.Log("Love/Hate: EvaluateRumor actor:" + factionManager.GetFaction(rumor.actorFactionID).name +
-				          " tag:" + rumor.tag + " target:" + factionManager.GetFaction(rumor.targetFactionID).name +
-				          " source:" + source.name);
-				Debug.Log("Love/Hate:    confidence in source: " + confidence);
-				Debug.Log("Love/Hate:    affinity to target: " + affinityToTarget);
-				Debug.Log("Love/Hate:    deed impact: " + rumor.impact);
-				Debug.Log("Love/Hate:    value alignment: " + rumorValuesAlignment * 100);
-				Debug.Log("Love/Hate:    value alignment impact: " + valueImpactNorm * 100);
-				Debug.Log("Love/Hate:    pad state impact: " + padImpactNorm * 100);
-				Debug.Log("Love/Hate:    change in affinity to actor (final): " + changeInAffinityToActor);
-			}
-
-			return ApplyRumorImpact(rumor, source, confidence, changeInAffinityToActor);
-		}
-
-		/// <summary>
-		/// Applies an evaluated rumor to the faction member. This is separate from the DefaultEvaluateRumor
-		/// method so you can call it in your own custom evaluation methods. It updates the faction member's
-		/// state and adds a new rumor to its memory or updates an existing memory.
-		/// </summary>
-		/// <returns>The rumor in this member's memory.</returns>
-		/// <param name="rumor">The original rumor that the member heard.</param>
-		/// <param name="source">Source of the original rumor.</param>
-		/// <param name="confidence">This member's confidence in the original rumor.</param>
-		/// <param name="changeInAffinityToActor">Change in this member's affinity to actor.</param>
-		public Rumor ApplyRumorImpact(Rumor rumor, FactionMember source, float confidence, float changeInAffinityToActor)
-		{
-			if (!FindResources()) return null;
+			// Final change in affinity to actor:
+			var changeInAffinityToActor = 100 * Mathf.Clamp(changeInAffinityToActorNorm + traitImpactNorm + arousalImpactNorm, -1, 1); //[-100,+100]
 
 			// If it's a repeat, reduce the impact and update the old rumor:
 			Rumor oldRumor;
@@ -669,39 +696,49 @@ namespace PixelCrushers.LoveHate
 				changeInAffinityToActor *= acclimatizationCurve.Evaluate(oldRumor.count);
 			}
 
-			// Clamp the opinion to [-100,+100]:
-			changeInAffinityToActor = Mathf.Clamp(changeInAffinityToActor, -100, 100);
+			// Values that affect PAD:
 			var changeMagnitude = Mathf.Abs(changeInAffinityToActor);
+			var myPowerLevel = GetSelfPerceivedPowerLevel();
+			var powerModifier = Mathf.Clamp(powerDifferenceCurve.Evaluate(myPowerLevel - rumor.actorPowerLevel), -1, 1); //[-1,+1]
 
-			// Update PAD:
+			// Compute PAD change:
 			var pleasure = changeInAffinityToActor;
-			var arousal = changeMagnitude;
-			var dominance = ComputeDominanceChange(rumor, changeMagnitude);
+			var arousal = changeMagnitude * (arousalImportance / 100);
+			var dominance = -rumor.aggression * changeMagnitude / 100;
+			dominance += powerModifier * Mathf.Abs(dominance);
 			var happiness = pleasure;
-			pad.Modify(happiness, pleasure, arousal, dominance);
+
+			if (debugEvalFunc)
+			{
+				Debug.Log("Love/Hate: " + name + ".EvaluateRumor actor:" + factionManager.GetFaction(rumor.actorFactionID).name +
+				          " tag:" + rumor.tag + " target:" + factionManager.GetFaction(rumor.targetFactionID).name +
+				          " impact:" + rumor.impact + " aggression:" + rumor.aggression + " source:" + source.name +
+				          "\n   confidence in source: " + confidence + "%" +
+				          "\n   affinity to target: " + affinityToTarget + 
+				          "\n   change in affinity to actor based on impact, target & confidence: " + changeInAffinityToActorNorm * 100 +
+				          "\n   + trait alignment modifier: " + traitImpactNorm * 100 + " (based on " + traitAlignment * 100 + "% alignment)" +
+				          "\n   + arousal modifier: " + arousalImpactNorm * 100 + " (based on " + pad.arousal + " arousal)" +
+				          "\n   <b>= final change in affinity to actor: " + changeInAffinityToActor +
+				          "</b>\n   power difference: " + myPowerLevel + "(me) - " + rumor.actorPowerLevel + "(actor) = " + (myPowerLevel - rumor.actorPowerLevel) +
+				          " (adjust dominance change up by " + powerModifier * 100 + "%)" +
+				          "\n   <b>P,A,D change: " + pleasure + ", " + arousal + ", " + dominance + "</b>", this);
+			}
+			
+			// Apply PAD change:
+			ModifyPAD(happiness, pleasure, arousal, dominance);
 
 			// Update affinity:
 			var oldAffinityToActor = GetAffinity(rumor.actorFactionID);
 			var newAffinityToActor = Mathf.Clamp(oldAffinityToActor + pleasure, -100, 100);
 			SetPersonalAffinity(rumor.actorFactionID, newAffinityToActor);
 			
-			if (debugEvalFunc)
-			{
-				Debug.Log("Love/Hate: ApplyRumorImpact actor:" + factionManager.GetFaction(rumor.actorFactionID).name +
-				          " tag:" + rumor.tag + " target:" + factionManager.GetFaction(rumor.targetFactionID).name +
-				          " source:" + source.name);
-				Debug.Log("Love/Hate:    P,A,D change: " + pleasure + ", " + arousal + ", " + dominance);
-				Debug.Log("Love/Hate:    old affinity to actor: " + oldAffinityToActor);
-				Debug.Log("Love/Hate:    new affinity to actor: " + newAffinityToActor);
-			}
-
 			// If the opinion is over the threshold we care about, remember the rumor:
 			Rumor result = null;
 			if (isRepeat)
 			{
 				if (factionManager.debug || debugEvalFunc)
 				{
-					Debug.Log(string.Format("{0}.UpdateExistingRumor actor:{1} target:{2} affinityChange:{3:N2}", new object[] { name, factionManager.GetFaction(rumor.actorFactionID).name, factionManager.GetFaction(rumor.targetFactionID).name, pleasure }), this);
+					Debug.Log(string.Format("Love/Hate: {0}.UpdateExistingRumor actor:{1} target:{2} affinityChange:{3:N2}", new object[] { name, factionManager.GetFaction(rumor.actorFactionID).name, factionManager.GetFaction(rumor.targetFactionID).name, pleasure }), this);
 				}
 				oldRumor.confidence = Mathf.Max(oldRumor.confidence, confidence);
 				result = oldRumor;
@@ -716,14 +753,14 @@ namespace PixelCrushers.LoveHate
 				newRumor.memorable = (changeMagnitude > deedImpactThreshold);
 				if (!newRumor.memorable)
 				{
-					pad.Modify(0, -pleasure, -arousal, -dominance);
+					ModifyPAD(0, -pleasure, -arousal, -dominance);
 				}
 				result = newRumor;
 				if (newRumor.memorable)
 				{
 					if (factionManager.debug || debugEvalFunc)
 					{
-						Debug.Log(string.Format("{0}.RememberRumor actor:{1} target:{2} affinityChange:{3:N2}", new object[] { name, factionManager.GetFaction(rumor.actorFactionID).name, factionManager.GetFaction(rumor.targetFactionID).name, pleasure }), this);
+						Debug.Log(string.Format("Love/Hate: {0}.RememberRumor actor:{1} target:{2} affinityChange:{3:N2}", new object[] { name, factionManager.GetFaction(rumor.actorFactionID).name, factionManager.GetFaction(rumor.targetFactionID).name, pleasure }), this);
 					}
 					AddRumorToMemory(newRumor);
 				}
@@ -731,7 +768,7 @@ namespace PixelCrushers.LoveHate
 				{
 					if (factionManager.debug || debugEvalFunc)
 					{
-						Debug.Log(string.Format("{0}.Rumor isn't memorable actor:{1} target:{2} affinityChange:{3:N2}", new object[] { name, factionManager.GetFaction(rumor.actorFactionID).name, factionManager.GetFaction(rumor.targetFactionID).name, pleasure }), this);
+						Debug.Log(string.Format("Love/Hate: {0}.Rumor isn't memorable actor:{1} target:{2} affinityChange:{3:N2}", new object[] { name, factionManager.GetFaction(rumor.actorFactionID).name, factionManager.GetFaction(rumor.targetFactionID).name, pleasure }), this);
 					}
 				}
 			}
@@ -744,24 +781,9 @@ namespace PixelCrushers.LoveHate
 		}
 
 		/// <summary>
-		/// Computes the dominance change based on the rumor and the magnitude of the
-		/// change in affinity to the actor. The value is primarily based on the deed's
-		/// aggression value, but it's influenced by the power differential between
-		/// the actor and the member's self-perceived power level.
+		/// The default power level function, which simply returns 1.
 		/// </summary>
-		/// <returns>The dominance change [-100,+100] where negative means the rumor makes
-		/// the member feel more submissive and positive means the member feels more dominant.</returns>
-		/// <param name="rumor">Rumor.</param>
-		/// <param name="changeMagnitude">Magnitude of change in affinity to actor.</param>
-		public float ComputeDominanceChange(Rumor rumor, float changeMagnitude)
-		{
-			if (rumor == null) return 0;
-			var powerDifference = Mathf.Clamp((GetSelfPerceivedPowerLevel() - rumor.actorPowerLevel) / 10, -1, 1); //[-1,+1]
-			var dominance = -rumor.aggression * (changeMagnitude / 100); //[-100,+100]
-			dominance += powerDifference * Mathf.Abs(dominance);
-			return dominance;
-		}
-
+		/// <returns>The faction member's default power level.</returns>
 		public float DefaultGetPowerLevel()
 		{
 			return 1;
@@ -771,15 +793,22 @@ namespace PixelCrushers.LoveHate
 
 		#region Serialization
 
+		/// <summary>
+		/// Serializes the faction member's data to a string.
+		/// </summary>
+		/// <returns>The string representing the faction member's data.</returns>
 		public string SerializeToString()
 		{
 			var sb = new StringBuilder();
 			
+			// Record faction ID:
+			sb.AppendFormat("{0},", factionID);
+			
 			// Record PAD:
 			sb.AppendFormat("{0},{1},{2},{3},", pad.happiness, pad.pleasure, pad.arousal, pad.dominance);
 			
-			// Record short term memories:
-			sb.AppendFormat("{0},", shortTermMemory.Count);
+			// Record memories:
+			sb.AppendFormat("{0},", longTermMemory.Count);
 			for (int m = 0; m < longTermMemory.Count; m++)
 			{
 				var mem = longTermMemory[m];
@@ -796,13 +825,26 @@ namespace PixelCrushers.LoveHate
 			return sb.ToString();
 		}
 
+		/// <summary>
+		/// Deserializes the faction member's data from a string. This string must
+		/// have been generated by SerializeToString. This method replaces the
+		/// faction member's current data with the serialized data in the strnig.
+		/// </summary>
+		/// <param name="s">Seralized data.</param>
 		public void DeserializeFromString(string s)
 		{
 			if (factionManager == null || factionManager.factionDatabase == null) return;
 			var traitCount = factionManager.factionDatabase.personalityTraitDefinitions.Length;
 
 			var data = new Queue<string>(s.Split(','));
-			if (data.Count < 4) return;
+			if (data.Count < 5) return;
+
+			// Get faction ID:
+			var newFactionID = SafeConvert.ToInt(data.Dequeue());
+			if (newFactionID != factionID)
+			{
+				SwitchFaction(newFactionID);
+			}
 			
 			// Get PAD:
 			pad.happiness = SafeConvert.ToFloat(data.Dequeue());
@@ -862,18 +904,21 @@ namespace PixelCrushers.LoveHate
 			}
 		}
 
-		#endregion
+        #endregion
 
-		#region Gizmos
+        #region Gizmos
 
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
 
-		public void OnDrawGizmos()
-		{
-			if (factionDatabase == null) return;
-			var faction = factionDatabase.GetFaction(factionID);
-			if (faction == null || faction.color >= Faction.GizmoIconNames.Length) return;
-			Gizmos.DrawIcon(transform.position, Faction.GizmoIconNames[faction.color], true);
+        /// <summary>
+        /// Draw a Love/Hate faction member gizmo based on the faction's color.
+        /// </summary>
+        public void OnDrawGizmos()
+        {
+            if (factionDatabase == null) return;
+            var faction = factionDatabase.GetFaction(factionID);
+            if (faction == null || faction.color >= Faction.GizmoIconNames.Length) return;
+            Gizmos.DrawIcon(transform.position, Faction.GizmoIconNames[faction.color], true);
 		}
 
 		#endif

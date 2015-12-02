@@ -103,15 +103,40 @@ namespace PixelCrushers.LoveHate
 			return new float[count];
 		}
 
-		/// <summary>
-		/// Computes the "alignment" of two sets of values, which is how well their extremes
-		/// match, not how close their values are. If both sets are all zero, they're close
-		/// in value but they have no extremes so the alignment is zero.
-		/// </summary>
-		/// <returns>A value in the range -1 to +1 indicating how well the values align.</returns>
-		/// <param name="a">The first set of values.</param>
-		/// <param name="b">The second set of values.</param>
-		public static float Alignment(float[] a, float[] b)
+        /// <summary>
+        /// Allocates an array of a specified size.
+        /// </summary>
+        /// <param name="count">Count.</param>
+        /// /// <param name="initialize">Set `true` to initialize the array to zero.</param>
+        public static float[] Allocate(int count, bool initialize)
+        {
+            var traits = Allocate(count);
+            if (initialize)
+            {
+                Initialize(traits);
+            }
+            return traits;
+        }
+
+        /// <summary>
+        /// Initializes an array to zero.
+        /// </summary>
+        /// <param name="traits">Traits</param>
+        public static void Initialize(float[] traits)
+        {
+            if (traits == null) return;
+            Array.Clear(traits, 0, traits.Length);
+        }
+
+        /// <summary>
+        /// Computes the "alignment" of two sets of values, which is how well their extremes
+        /// match, not how close their values are. If both sets are all zero, they're close
+        /// in value but they have no extremes so the alignment is zero.
+        /// </summary>
+        /// <returns>A value in the range -1 to +1 indicating how well the values align.</returns>
+        /// <param name="a">The first set of values.</param>
+        /// <param name="b">The second set of values.</param>
+        public static float Alignment(float[] a, float[] b)
 		{
 			float overlap = 0;
 			var length = Mathf.Min(a.Length, b.Length);

@@ -37,9 +37,6 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
---- !u!127 &3
-LevelGameManager:
-  m_ObjectHideFlags: 0
 --- !u!157 &4
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -68,6 +65,7 @@ LightmapSettings:
     m_TextureCompression: 0
     m_FinalGather: 0
     m_FinalGatherRayCount: 1024
+    m_ReflectionCompression: 2
   m_LightmapSnapshot: {fileID: 0}
   m_RuntimeCPUUsage: 25
 --- !u!196 &5
@@ -130,7 +128,7 @@ SpriteRenderer:
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
-  m_ReflectionProbeUsage: 1
+  m_ReflectionProbeUsage: 0
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
@@ -211,6 +209,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: .0627451017, g: .0627451017, b: .0627451017, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 14
@@ -304,6 +308,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: .39199999}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
   m_Type: 1
   m_PreserveAspect: 0
@@ -376,7 +386,7 @@ SpriteRenderer:
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
-  m_ReflectionProbeUsage: 1
+  m_ReflectionProbeUsage: 0
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
@@ -484,13 +494,12 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 926590805}
+      - m_Target: {fileID: 926590802}
         m_MethodName: CommitDeed
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: Steal
@@ -512,6 +521,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_Sprite: {fileID: 21300000, guid: f9023ba9d8161da49819792115a6c81f, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
@@ -697,7 +712,7 @@ SpriteRenderer:
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
-  m_ReflectionProbeUsage: 1
+  m_ReflectionProbeUsage: 0
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
@@ -752,7 +767,7 @@ SpriteRenderer:
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
-  m_ReflectionProbeUsage: 1
+  m_ReflectionProbeUsage: 0
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
@@ -807,7 +822,7 @@ SpriteRenderer:
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
-  m_ReflectionProbeUsage: 1
+  m_ReflectionProbeUsage: 0
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
@@ -868,6 +883,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: .0627451017, g: .0627451017, b: .0627451017, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 14
@@ -975,7 +996,7 @@ SpriteRenderer:
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
-  m_ReflectionProbeUsage: 1
+  m_ReflectionProbeUsage: 0
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
@@ -1030,7 +1051,7 @@ SpriteRenderer:
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
-  m_ReflectionProbeUsage: 1
+  m_ReflectionProbeUsage: 0
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
@@ -1057,6 +1078,7 @@ GameObject:
   - 114: {fileID: 509715416}
   - 114: {fileID: 509715415}
   - 114: {fileID: 509715414}
+  - 114: {fileID: 509715421}
   m_Layer: 0
   m_Name: Pink Girl
   m_TagString: Untagged
@@ -1092,6 +1114,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89c9111328cca764ea946a6fb0c57eaf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  controlMovement: 1
   moveToPosition: {x: 0, y: 0, z: 0}
   powerLevel: 1
   selfPerceivedPowerLevel: 1
@@ -1143,6 +1166,8 @@ MonoBehaviour:
     arousal: 0
     dominance: 0
     excitabilityThreshold: .200000003
+  traitAlignmentImportance: 50
+  arousalImportance: 50
   deedImpactThreshold: 2
   acclimatizationCurve:
     m_Curve:
@@ -1153,6 +1178,25 @@ MonoBehaviour:
       tangentMode: 0
     - time: 10
       value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+  powerDifferenceCurve:
+    m_Curve:
+    - time: -10
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - time: 1
+      value: .100000001
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - time: 10
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -1216,6 +1260,7 @@ BoxCollider2D:
   m_Size: {x: .699999988, y: .5}
 --- !u!50 &509715420
 Rigidbody2D:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 5001274, guid: 1c701b03c49bcdb43a7cb6682e56548a,
     type: 2}
@@ -1225,11 +1270,38 @@ Rigidbody2D:
   m_LinearDrag: 0
   m_AngularDrag: .0500000007
   m_GravityScale: 0
-  m_FixedAngle: 0
   m_IsKinematic: 1
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
+  m_Constraints: 0
+--- !u!114 &509715421
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 509715412}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 539cb988a0003754b93c08d1d68211f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  happinessSettings:
+    stabilize: 0
+    target: 0
+    changeRate: .100000001
+  pleasureSettings:
+    stabilize: 0
+    target: 0
+    changeRate: .100000001
+  arousalSettings:
+    stabilize: 1
+    target: 0
+    changeRate: .100000001
+  dominanceSettings:
+    stabilize: 0
+    target: 0
+    changeRate: .100000001
 --- !u!1 &551231531
 GameObject:
   m_ObjectHideFlags: 0
@@ -1260,7 +1332,7 @@ MonoBehaviour:
   m_Script: {fileID: 1997211142, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_AllowActivationOnStandalone: 0
+  m_ForceModuleActive: 0
 --- !u!114 &551231533
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1278,7 +1350,8 @@ MonoBehaviour:
   m_SubmitButton: Submit
   m_CancelButton: Cancel
   m_InputActionsPerSecond: 10
-  m_AllowActivationOnMobileDevice: 0
+  m_RepeatDelay: .5
+  m_ForceModuleActive: 0
 --- !u!114 &551231534
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1349,7 +1422,7 @@ SpriteRenderer:
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
-  m_ReflectionProbeUsage: 1
+  m_ReflectionProbeUsage: 0
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
@@ -1378,6 +1451,7 @@ GameObject:
   - 114: {fileID: 601276678}
   - 114: {fileID: 601276670}
   - 114: {fileID: 601276677}
+  - 114: {fileID: 601276679}
   m_Layer: 0
   m_Name: Princess
   m_TagString: Untagged
@@ -1413,6 +1487,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89c9111328cca764ea946a6fb0c57eaf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  controlMovement: 1
   moveToPosition: {x: 0, y: 0, z: 0}
   powerLevel: 10
   selfPerceivedPowerLevel: 10
@@ -1464,6 +1539,8 @@ MonoBehaviour:
     arousal: 0
     dominance: 0
     excitabilityThreshold: .200000003
+  traitAlignmentImportance: 50
+  arousalImportance: 50
   deedImpactThreshold: 2
   acclimatizationCurve:
     m_Curve:
@@ -1474,6 +1551,25 @@ MonoBehaviour:
       tangentMode: 0
     - time: 10
       value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+  powerDifferenceCurve:
+    m_Curve:
+    - time: -10
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - time: 1
+      value: .100000001
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - time: 10
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -1537,6 +1633,7 @@ BoxCollider2D:
   m_Size: {x: .699999988, y: .5}
 --- !u!50 &601276676
 Rigidbody2D:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 5096254, guid: ab52bcf8f4d1429489d8e95514968d96,
     type: 2}
@@ -1546,11 +1643,11 @@ Rigidbody2D:
   m_LinearDrag: 0
   m_AngularDrag: .0500000007
   m_GravityScale: 0
-  m_FixedAngle: 0
   m_IsKinematic: 1
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!114 &601276677
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1583,6 +1680,33 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cacheSize: 32
   timeBetweenGossip: 300
+--- !u!114 &601276679
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 601276668}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 539cb988a0003754b93c08d1d68211f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  happinessSettings:
+    stabilize: 0
+    target: 0
+    changeRate: .100000001
+  pleasureSettings:
+    stabilize: 0
+    target: 0
+    changeRate: .100000001
+  arousalSettings:
+    stabilize: 1
+    target: 0
+    changeRate: .100000001
+  dominanceSettings:
+    stabilize: 0
+    target: 0
+    changeRate: .100000001
 --- !u!1 &608363108
 GameObject:
   m_ObjectHideFlags: 0
@@ -1679,13 +1803,12 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 926590805}
+      - m_Target: {fileID: 926590802}
         m_MethodName: CommitDeed
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: Flatter
@@ -1707,6 +1830,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_Sprite: {fileID: 21300000, guid: 39b1cf67b69ba104aa115767214945bb, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
@@ -1773,6 +1902,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: .39199999}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
   m_Type: 1
   m_PreserveAspect: 0
@@ -1885,10 +2020,12 @@ Camera:
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
+  m_TargetEye: 3
   m_HDR: 0
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: .0219999999
+  m_StereoMirrorMode: 0
 --- !u!4 &726749047
 Transform:
   m_ObjectHideFlags: 0
@@ -1943,10 +2080,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d1fe1c374b9b854590a1820873bf1f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  factionManager: {fileID: 0}
   introCanvasGroup: {fileID: 1835633516}
-  panel: {fileID: 642560777}
-  text: {fileID: 135059143}
+  interactionPanel: {fileID: 642560777}
+  npcSummaryText: {fileID: 135059143}
+  flatterButton: {fileID: 608363111}
+  insultButton: {fileID: 1233139602}
+  giveButton: {fileID: 1192142198}
+  stealButton: {fileID: 188555204}
 --- !u!1 &926590797
 GameObject:
   m_ObjectHideFlags: 0
@@ -1958,10 +2098,9 @@ GameObject:
   - 212: {fileID: 926590798}
   - 50: {fileID: 926590801}
   - 61: {fileID: 926590800}
-  - 114: {fileID: 926590802}
   - 114: {fileID: 926590804}
   - 114: {fileID: 926590803}
-  - 114: {fileID: 926590805}
+  - 114: {fileID: 926590802}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -1984,7 +2123,7 @@ SpriteRenderer:
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
-  m_ReflectionProbeUsage: 1
+  m_ReflectionProbeUsage: 0
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
@@ -2024,6 +2163,7 @@ BoxCollider2D:
   m_Size: {x: .699999988, y: .5}
 --- !u!50 &926590801
 Rigidbody2D:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 5041460, guid: 838c01090bfe6534797f68e24740ecd4,
     type: 2}
@@ -2033,11 +2173,11 @@ Rigidbody2D:
   m_LinearDrag: 0
   m_AngularDrag: .0500000007
   m_GravityScale: 0
-  m_FixedAngle: 1
   m_IsKinematic: 0
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
+  m_Constraints: 4
 --- !u!114 &926590802
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2050,8 +2190,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aadfe4527dcdc58478dad864b8abfc42, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  controlMovement: 1
   moveToPosition: {x: 0, y: 0, z: 0}
   speedFactor: .5
+  uiUpdateFrequency: .5
 --- !u!114 &926590803
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2064,7 +2206,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 733275cc048824246942ffd0fe2bc77a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dimension: 1
+  dimension: 0
   deedTemplateLibrary: {fileID: 11400000, guid: 7d379c79458ebe349a8eeea5d6adf7fe,
     type: 2}
 --- !u!114 &926590804
@@ -2088,6 +2230,8 @@ MonoBehaviour:
     arousal: 0
     dominance: 0
     excitabilityThreshold: .200000003
+  traitAlignmentImportance: 50
+  arousalImportance: 50
   deedImpactThreshold: 5
   acclimatizationCurve:
     m_Curve:
@@ -2103,6 +2247,25 @@ MonoBehaviour:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
+  powerDifferenceCurve:
+    m_Curve:
+    - time: -10
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - time: 1
+      value: .100000001
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - time: 10
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
   maxMemories: 50
   shortTermMemoryDuration: 300
   longTermMemoryDuration: 3600
@@ -2113,18 +2276,6 @@ MonoBehaviour:
   eyes: {fileID: 0}
   sightLayerMask: {}
   debugEvalFunc: 0
---- !u!114 &926590805
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11441466, guid: 838c01090bfe6534797f68e24740ecd4,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 926590797}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bfb4258b33fa62e4a8296c56a257e9c1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &997630038
 GameObject:
   m_ObjectHideFlags: 0
@@ -2174,6 +2325,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_Sprite: {fileID: 21300000, guid: 833801a595936794fa118b9dfd02440d, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
@@ -2220,7 +2377,7 @@ SpriteRenderer:
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
-  m_ReflectionProbeUsage: 1
+  m_ReflectionProbeUsage: 0
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
@@ -2259,6 +2416,7 @@ GameObject:
   - 114: {fileID: 1123834531}
   - 114: {fileID: 1123834533}
   - 114: {fileID: 1123834530}
+  - 114: {fileID: 1123834528}
   m_Layer: 0
   m_Name: Cat Girl
   m_TagString: Untagged
@@ -2282,6 +2440,7 @@ BoxCollider2D:
   m_Size: {x: .699999988, y: .5}
 --- !u!50 &1123834527
 Rigidbody2D:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 5049402, guid: d5373db8211661e4896b50e4a070d97b,
     type: 2}
@@ -2291,11 +2450,38 @@ Rigidbody2D:
   m_LinearDrag: 0
   m_AngularDrag: .0500000007
   m_GravityScale: 0
-  m_FixedAngle: 0
   m_IsKinematic: 1
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
+  m_Constraints: 0
+--- !u!114 &1123834528
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1123834525}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 539cb988a0003754b93c08d1d68211f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  happinessSettings:
+    stabilize: 0
+    target: 0
+    changeRate: .100000001
+  pleasureSettings:
+    stabilize: 0
+    target: 0
+    changeRate: .100000001
+  arousalSettings:
+    stabilize: 1
+    target: 0
+    changeRate: .100000001
+  dominanceSettings:
+    stabilize: 0
+    target: 0
+    changeRate: .100000001
 --- !u!4 &1123834529
 Transform:
   m_ObjectHideFlags: 0
@@ -2324,6 +2510,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89c9111328cca764ea946a6fb0c57eaf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  controlMovement: 1
   moveToPosition: {x: 0, y: 0, z: 0}
   powerLevel: 1
   selfPerceivedPowerLevel: .5
@@ -2348,6 +2535,8 @@ MonoBehaviour:
     arousal: 0
     dominance: 0
     excitabilityThreshold: .200000003
+  traitAlignmentImportance: 50
+  arousalImportance: 50
   deedImpactThreshold: 2
   acclimatizationCurve:
     m_Curve:
@@ -2358,6 +2547,25 @@ MonoBehaviour:
       tangentMode: 0
     - time: 10
       value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+  powerDifferenceCurve:
+    m_Curve:
+    - time: -10
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - time: 1
+      value: .100000001
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - time: 10
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -2528,13 +2736,12 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 926590805}
+      - m_Target: {fileID: 926590802}
         m_MethodName: CommitDeed
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: Give
@@ -2556,6 +2763,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_Sprite: {fileID: 21300000, guid: ee90c420b653ec84b89f05e1c8d225c8, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
@@ -2614,7 +2827,7 @@ SpriteRenderer:
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
-  m_ReflectionProbeUsage: 1
+  m_ReflectionProbeUsage: 0
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
@@ -2722,13 +2935,12 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 926590805}
+      - m_Target: {fileID: 926590802}
         m_MethodName: CommitDeed
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine, Version=0.0.0.0,
-            Culture=neutral, PublicKeyToken=null
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: Insult
@@ -2750,6 +2962,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_Sprite: {fileID: 21300000, guid: 58e3c1a4b0eeae44ab0cfb53924e26e0, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
@@ -2808,7 +3026,7 @@ SpriteRenderer:
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
-  m_ReflectionProbeUsage: 1
+  m_ReflectionProbeUsage: 0
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
@@ -2897,7 +3115,7 @@ SpriteRenderer:
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
-  m_ReflectionProbeUsage: 1
+  m_ReflectionProbeUsage: 0
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
@@ -2994,7 +3212,7 @@ SpriteRenderer:
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
-  m_ReflectionProbeUsage: 1
+  m_ReflectionProbeUsage: 0
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
@@ -3104,6 +3322,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_Sprite: {fileID: 21300000, guid: 833801a595936794fa118b9dfd02440d, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
@@ -3170,6 +3394,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_Sprite: {fileID: 21300000, guid: 833801a595936794fa118b9dfd02440d, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
@@ -3200,6 +3430,7 @@ GameObject:
   - 114: {fileID: 1672183955}
   - 114: {fileID: 1672183954}
   - 114: {fileID: 1672183953}
+  - 114: {fileID: 1672183960}
   m_Layer: 0
   m_Name: Horn Girl
   m_TagString: Untagged
@@ -3235,6 +3466,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89c9111328cca764ea946a6fb0c57eaf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  controlMovement: 1
   moveToPosition: {x: 0, y: 0, z: 0}
   powerLevel: 1
   selfPerceivedPowerLevel: 1
@@ -3286,6 +3518,8 @@ MonoBehaviour:
     arousal: 0
     dominance: 0
     excitabilityThreshold: .200000003
+  traitAlignmentImportance: 50
+  arousalImportance: 50
   deedImpactThreshold: 2
   acclimatizationCurve:
     m_Curve:
@@ -3296,6 +3530,25 @@ MonoBehaviour:
       tangentMode: 0
     - time: 10
       value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+  powerDifferenceCurve:
+    m_Curve:
+    - time: -10
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - time: 1
+      value: .100000001
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - time: 10
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -3359,6 +3612,7 @@ BoxCollider2D:
   m_Size: {x: .699999988, y: .5}
 --- !u!50 &1672183959
 Rigidbody2D:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 5075384, guid: b26a59547e312994ba37ed7b5d61ffa2,
     type: 2}
@@ -3368,11 +3622,38 @@ Rigidbody2D:
   m_LinearDrag: 0
   m_AngularDrag: .0500000007
   m_GravityScale: 0
-  m_FixedAngle: 0
   m_IsKinematic: 1
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
+  m_Constraints: 0
+--- !u!114 &1672183960
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1672183951}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 539cb988a0003754b93c08d1d68211f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  happinessSettings:
+    stabilize: 0
+    target: 0
+    changeRate: .100000001
+  pleasureSettings:
+    stabilize: 0
+    target: 0
+    changeRate: .100000001
+  arousalSettings:
+    stabilize: 1
+    target: 0
+    changeRate: .100000001
+  dominanceSettings:
+    stabilize: 0
+    target: 0
+    changeRate: .100000001
 --- !u!1 &1743098870
 GameObject:
   m_ObjectHideFlags: 0
@@ -3404,7 +3685,7 @@ SpriteRenderer:
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
-  m_ReflectionProbeUsage: 1
+  m_ReflectionProbeUsage: 0
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
@@ -3471,7 +3752,7 @@ SpriteRenderer:
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
-  m_ReflectionProbeUsage: 1
+  m_ReflectionProbeUsage: 0
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
@@ -3546,6 +3827,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_Sprite: {fileID: 21300000, guid: 833801a595936794fa118b9dfd02440d, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
@@ -3619,8 +3906,13 @@ MonoBehaviour:
   m_Inertia: 1
   m_DecelerationRate: .135000005
   m_ScrollSensitivity: 1
+  m_Viewport: {fileID: 0}
   m_HorizontalScrollbar: {fileID: 0}
   m_VerticalScrollbar: {fileID: 1515466580}
+  m_HorizontalScrollbarVisibility: 0
+  m_VerticalScrollbarVisibility: 0
+  m_HorizontalScrollbarSpacing: 0
+  m_VerticalScrollbarSpacing: 0
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -3640,6 +3932,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: .39199999}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
   m_Type: 1
   m_PreserveAspect: 0
@@ -3711,7 +4009,7 @@ SpriteRenderer:
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
-  m_ReflectionProbeUsage: 1
+  m_ReflectionProbeUsage: 0
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
@@ -3766,7 +4064,7 @@ SpriteRenderer:
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
-  m_ReflectionProbeUsage: 1
+  m_ReflectionProbeUsage: 0
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
@@ -3853,6 +4151,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: .39199999}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
   m_Type: 1
   m_PreserveAspect: 0

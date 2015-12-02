@@ -61,6 +61,7 @@ namespace PixelCrushers.LoveHate
 			}
 			m_members.Clear();
 			m_witnessQueue.Clear();
+            if (!Debug.isDebugBuild) debug = false;
 		}
 
 		#endregion
@@ -74,14 +75,49 @@ namespace PixelCrushers.LoveHate
 		/// <param name="factionID">Faction ID.</param>
 		public Faction GetFaction(int factionID)
 		{
-			var faction = m_factions.ContainsKey(factionID) ? m_factions[factionID] : null;
-			if (faction == null)
+			return GetFaction(factionID, false);
+		}
+
+		/// <summary>
+		/// Looks up a faction by its ID. Doesn't log any warning messages.
+		/// </summary>
+		/// <returns>The faction.</returns>
+		/// <param name="factionID">Faction ID.</param>
+		public Faction GetFactionSilent(int factionID)
+		{
+			return GetFaction(factionID, true);
+		}
+
+		/// <summary>
+		/// Looks up a faction by its ID.
+		/// </summary>
+		/// <returns>The faction.</returns>
+		/// <param name="factionID">Faction ID.</param>
+		/// <param name="silent">If set to <c>true</c>, don't log warnings.</param>
+		public Faction GetFaction(int factionID, bool silent)
+		{
+			Faction faction = null;
+			if (m_factions.ContainsKey(factionID)) 
+			{
+				// Get from cache:
+				faction = m_factions[factionID];
+			}
+			else 
+			{
+				// Look up in database and update cache:
+				faction = factionDatabase.GetFaction(factionID);
+				if (faction != null)
+				{
+					m_factions.Add(factionID, faction);
+				}
+			}
+			if (faction == null && !silent)
 			{
 				Debug.LogWarning("Love/Hate: Can't find faction with ID " + factionID, this);
 			}
 			return faction;
 		}
-
+		
 		/// <summary>
 		/// Looks up a faction by its name.
 		/// </summary>
@@ -120,15 +156,19 @@ namespace PixelCrushers.LoveHate
 		public void RegisterFactionMember(FactionMember member)
 		{
 			if (member == null) return;
+			member.factionDatabase = factionDatabase;
 			var faction = GetFaction(member.factionID);
 			if (faction == null)
 			{
-				Debug.LogError("Love/Hate: Can't find faction for FactionMember " + member.name, member);
+				Debug.LogError("Love/Hate: Can't find faction for FactionMember " + member.name + " (faction ID " + member.factionID + ")", member);
 				return;
 			}
 			if (m_members.ContainsKey(faction))
 			{
-				m_members[faction].Add(member);
+				if (!m_members[faction].Contains(member))
+				{
+					m_members[faction].Add(member);
+				}
 			}
 			else
 			{
@@ -145,7 +185,10 @@ namespace PixelCrushers.LoveHate
 			if (member == null) return;
 			var faction = GetFaction(member.factionID);
 			if (faction == null) return;
-			m_members[faction].Remove(member);
+			if (m_members.ContainsKey(faction) && m_members[faction].Contains(member)) 
+			{
+				m_members [faction].Remove (member);
+			}
 		}
 
 		#endregion
@@ -440,7 +483,7 @@ namespace PixelCrushers.LoveHate
 				{
 					var relationship = faction.relationships[r];
 					// Record relationship faction ID:
-					sb.AppendFormat("{0},", relationship.factionID);
+					sb.AppendFormat("{0},{1},", relationship.factionID, (relationship.inheritable ? 1 : 0));
 					// Record relationship trait values:
 					for (int t = 0; t < factionDatabase.relationshipTraitDefinitions.Length; t++)
 					{
@@ -488,12 +531,13 @@ namespace PixelCrushers.LoveHate
 				for (int r = 0; r < relationshipCount; r++)
 				{
 					var id = SafeConvert.ToInt(data.Dequeue());
-					var traits = new float[traitCount];
+                    var inheritable = (SafeConvert.ToInt(data.Dequeue()) == 1);
+                    var traits = new float[traitCount];
 					for (int i = 0; i < traitCount; i++)
 					{
 						traits[i] = SafeConvert.ToFloat(data.Dequeue());
 					}
-					var relationship = Relationship.GetNew(id, traits);
+					var relationship = Relationship.GetNew(id, inheritable, traits);
 					faction.relationships.Add(relationship);
 				}
 			}

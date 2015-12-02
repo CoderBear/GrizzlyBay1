@@ -69,7 +69,7 @@ namespace PixelCrushers.LoveHate
 		/// actor repeatedly attacks a target, count increases rather than creating
 		/// separate rumors for each sword swing.
 		/// </summary>
-		public int count = 0;
+		public int count = 1;
 
 		/// <summary>
 		/// The confidence the faction has in the source of the rumor. When the faction
